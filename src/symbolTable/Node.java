@@ -1,12 +1,18 @@
 package symbolTable;
 
-public class Node {
+public class Node extends BinarySearchTree {
     private Node left;
     private Node right;
-    private int value;
+    private String value;
+    private final int index;
 
-    public Node(int value) {
+    public Node(String value, int index) {
         this.value = value;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public Node getLeft() {
@@ -25,11 +31,7 @@ public class Node {
         this.right = right;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 }

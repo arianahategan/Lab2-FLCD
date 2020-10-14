@@ -7,19 +7,12 @@ public class SymbolTable {
         this.binarySearchTree = binarySearchTree;
     }
 
-    public void insert(int value){
+    public void insert(String value){
         binarySearchTree.insert(value);
     }
 
-    public boolean search(int value){
+    public int search(String value){
         return binarySearchTree.search(value);
-    }
-
-    private int getAsciiSum(String str){
-        int asciiSum = 0;
-        for(int i = 0; i < str.length(); i++)
-            asciiSum += str.charAt(i);
-        return asciiSum;
     }
 
 

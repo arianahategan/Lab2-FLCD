@@ -5,17 +5,18 @@ public class Main {
     public static void main(String[] args) {
         BinarySearchTree binarySearchTree = new BinarySearchTree();
 	    SymbolTable symbolTable = new SymbolTable(binarySearchTree);
-	    symbolTable.insert(12);
-		symbolTable.insert(15);
-	    symbolTable.insert(1);
-		symbolTable.insert(3);
-		symbolTable.insert(2);
-		symbolTable.insert(4);
-		symbolTable.insert(6);
-		symbolTable.insert(22);
+	    symbolTable.insert("d");
+		symbolTable.insert("b");
+	    symbolTable.insert("a");
+		symbolTable.insert("z");
+		symbolTable.insert("e");
+		symbolTable.insert("c");
+		symbolTable.insert("g");
+		symbolTable.insert("f");
+		symbolTable.insert("z");
 
-		if(symbolTable.search(22))
-	        System.out.println("found");
+
+		System.out.println("Position of the element z in the ST is: " + symbolTable.search("z"));
 
 		new BinaryTreePrinter(binarySearchTree.getRoot()).print(System.out);
     }

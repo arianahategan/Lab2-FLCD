@@ -3,108 +3,47 @@ package symbolTable;
 public class BinarySearchTree {
     private Node root;
 
+    private int length;
+
     public BinarySearchTree() {
+        length = 0;
     }
 
     public Node getRoot() {
         return root;
     }
 
-    public void setRoot(Node root) {
-        this.root = root;
-    }
-
-    public boolean search(int value){
+    public int search(String value){
         Node currentNode = root;
-        boolean found = false;
-        while(currentNode != null && !found)
-            if(currentNode.getValue() == value)
-                found = true;
+        int position = -1;
+        while(currentNode != null && position == -1)
+            if(currentNode.getValue().equals(value))
+                position = currentNode.getIndex();
             else
-                if(currentNode.getValue() < value)
+                if(currentNode.getValue().compareTo(value) < 0)
                     currentNode = currentNode.getRight();
                 else
                     currentNode = currentNode.getLeft();
-        return found;
+        return position;
     }
 
-    public void insert(int value) {
+    public void insert(String value) {
         root = insertRecursive(root, value);
     }
 
-    private Node insertRecursive(Node current, int value) {
+    private Node insertRecursive(Node current, String value) {
 
         if (current == null) {
-            return new Node(value);
+            length++;
+            return new Node(value, length - 1);
         }
 
-        if (value < current.getValue()) {
+        if (current.getValue().compareTo(value) > 0) {
             current.setLeft(insertRecursive(current.getLeft(), value));
-        } else if (value > current.getValue()) {
+        } else if (current.getValue().compareTo(value) < 0) {
             current.setRight(insertRecursive(current.getRight(), value));
         }
 
         return current;
-    }
-
-
-//    public Node insert(Node node, int value){
-//        if(root == null){
-//            node = new Node(value);
-//            root = node;
-//        }
-//        else{
-//            if(node == null){
-//                node = new Node(value);
-//            }
-//            else
-//                if(node.getValue() <= value)
-//                    node.setLeft(insert(node.getLeft(), value));
-//                else
-//                    node.setRight(insert(node.getRight(), value));
-//        }
-//        return node;
-//    }
-
-    public String traversePreOrder(Node root) {
-
-        if (root == null) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(root.getValue());
-
-        String pointerRight = "└──";
-        String pointerLeft = (root.getRight() != null) ? "├──" : "└──";
-
-        traverseNodes(sb, "", pointerLeft, root.getLeft(), root.getRight() != null);
-        traverseNodes(sb, "", pointerRight, root.getRight(), false);
-
-        return sb.toString();
-    }
-
-    public void traverseNodes(StringBuilder sb, String padding, String pointer, Node node,
-                              boolean hasRightSibling) {
-        if (node != null) {
-            sb.append("\n");
-            sb.append(padding);
-            sb.append(pointer);
-            sb.append(node.getValue());
-
-            StringBuilder paddingBuilder = new StringBuilder(padding);
-            if (hasRightSibling) {
-                paddingBuilder.append("│  ");
-            } else {
-                paddingBuilder.append("   ");
-            }
-
-            String paddingForBoth = paddingBuilder.toString();
-            String pointerRight = "└──";
-            String pointerLeft = (node.getRight() != null) ? "├──" : "└──";
-
-            traverseNodes(sb, paddingForBoth, pointerLeft, node.getLeft(), node.getRight() != null);
-            traverseNodes(sb, paddingForBoth, pointerRight, node.getRight(), false);
-        }
     }
 }
