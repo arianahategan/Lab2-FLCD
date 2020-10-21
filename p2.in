@@ -1,0 +1,19 @@
+BEGIN
+INT n;
+n:=2;
+BOOLEAN flag;
+flag:=FALSE;
+FOR(INT i:=2; i<=n/2; ++i)
+        {
+            IF(n%i=0)
+            {
+                flag:=TRUE;
+            }
+        }
+
+        IF(flag!=0)
+            {PRINT "s a prime number";}
+        ELSE
+            {PRINT "is NOT a prime number";}
+    }
+END
