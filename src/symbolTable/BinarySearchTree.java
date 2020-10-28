@@ -52,7 +52,7 @@ public class BinarySearchTree {
         return current;
     }
 
-    ArrayList<Node> getAll(Node root, ArrayList<Node> nodes) {
+    private ArrayList<Node> getAll(Node root, ArrayList<Node> nodes) {
         if (root != null) {
             nodes.add(root);
             getAll(root.getLeft(), nodes);
@@ -61,7 +61,7 @@ public class BinarySearchTree {
         return nodes;
     }
 
-    String getNodesByIndex() {
+    public String getNodesByIndex() {
         ArrayList<Node> nodes = getAll(root, new ArrayList<Node>());
         nodes.sort(new Comparator<Node>() {
             @Override

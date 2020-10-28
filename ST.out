@@ -1,1 +1,1 @@
-n x sum 0 i 
+n 2 flag i 0 "s a prime number" "is NOT a prime number" 

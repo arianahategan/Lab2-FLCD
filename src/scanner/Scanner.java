@@ -43,9 +43,16 @@ public class Scanner {
                         if (!currentToken.toString().equals(""))
                             tokens.add(currentToken.toString());
                         int index1 = indexAfterOperator(line, index);
-                        tokens.add(line.substring(index, index1));
+
+                        if(String.valueOf(line.charAt(index1)).matches("[1-9]") && (line.substring(index, index1).equals("+") || line.substring(index, index1).equals("-")))
+                            currentToken.append(line.substring(index, index1));
+                        else{
+                            tokens.add(line.substring(index, index1));
+                            currentToken = new StringBuilder();
+                        }
+
                         index = index1;
-                        currentToken = new StringBuilder();
+
                     }
 
                     else{

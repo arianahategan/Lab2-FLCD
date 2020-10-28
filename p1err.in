@@ -4,7 +4,7 @@ INT b;
 INT c;
 STRING str;
 INT max;
-str:=‘ok;
+str:='ok;
 a:=10;
 b:=20;
 c:=0;

@@ -42,7 +42,10 @@ public class Main {
 						if(isConstant(token) || isIdentifier(token)) {
 							symbolTable.insert(token);
 							int indexInST = symbolTable.search(token);
-							PIF.add(new Pair(token, indexInST));
+							if(isConstant(token))
+								PIF.add(new Pair("const", indexInST));
+							else
+								PIF.add(new Pair("Id", indexInST));
 						}
 						else{
 							if(!token.equals(" "))
@@ -181,7 +184,7 @@ public class Main {
 
 		//string
 		if(String.valueOf(token.charAt(0)).equals("\"") && lastCharacter.equals("\""))
-			if(token.substring(1, token.length() - 1).matches("[0-9A-Za-z_ ]+")){
+			if(token.substring(1, token.length() - 1).matches("[0-9A-Za-z_ ]*")){
 				return true;
 			}
 
