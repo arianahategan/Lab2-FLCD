@@ -15,5 +15,9 @@ public class SymbolTable {
         return binarySearchTree.search(value);
     }
 
+    public String getNodesByIndex(){
+        return binarySearchTree.getNodesByIndex();
+    }
+
 
 }

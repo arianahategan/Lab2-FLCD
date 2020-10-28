@@ -3,7 +3,7 @@ package symbolTable;
 public class Node extends BinarySearchTree {
     private Node left;
     private Node right;
-    private String value;
+    private final String value;
     private final int index;
 
     public Node(String value, int index) {
@@ -34,4 +34,5 @@ public class Node extends BinarySearchTree {
     public String getValue() {
         return value;
     }
+
 }

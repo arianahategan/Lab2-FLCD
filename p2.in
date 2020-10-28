@@ -11,7 +11,7 @@ FOR(INT i:=2; i<=n/2; ++i)
             }
         }
 
-        IF(flag!=0)
+        IF(flag!=FALSE)
             {PRINT "s a prime number";}
         ELSE
             {PRINT "is NOT a prime number";}

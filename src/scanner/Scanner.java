@@ -60,8 +60,11 @@ public class Scanner {
                         }
                         //other
                         else{
-                            currentToken.append(line.charAt(index));
+                            if(!String.valueOf(line.charAt(index)).equals("\t")){
+                                currentToken.append(line.charAt(index));
+                            }
                             index++;
+
 
                         }
                     }
@@ -95,7 +98,7 @@ public class Scanner {
     }
 
     private int indexAfterOperator(String line, int index) {
-        while(index < line.length() && isSymbolOfOperator(line.charAt(index)) && isSymbolOfOperator(line.charAt(index+1)) && isOperator(line.substring(index, index + 2))){
+        if(index < line.length() && isSymbolOfOperator(line.charAt(index)) && isSymbolOfOperator(line.charAt(index+1)) && isOperator(line.substring(index, index + 2))){
             return index + 2;
         }
         return index + 1;

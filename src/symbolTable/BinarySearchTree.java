@@ -1,5 +1,10 @@
 package symbolTable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class BinarySearchTree {
     private Node root;
 
@@ -46,4 +51,30 @@ public class BinarySearchTree {
 
         return current;
     }
+
+    ArrayList<Node> getAll(Node root, ArrayList<Node> nodes) {
+        if (root != null) {
+            nodes.add(root);
+            getAll(root.getLeft(), nodes);
+            getAll(root.getRight(), nodes);
+        }
+        return nodes;
+    }
+
+    String getNodesByIndex() {
+        ArrayList<Node> nodes = getAll(root, new ArrayList<Node>());
+        nodes.sort(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                return Integer.compare(o1.getIndex(), o2.getIndex());
+            }
+        });
+
+        StringBuilder str = new StringBuilder();
+        for(Node node: nodes)
+            str.append(node.getValue()).append(" ");
+        return str.toString();
+
+    }
+
 }

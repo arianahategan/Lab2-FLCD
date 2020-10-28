@@ -1,49 +1,52 @@
+import scanner.PIF;
+import scanner.Pair;
 import scanner.Scanner;
 import symbolTable.BinarySearchTree;
-import symbolTable.BinaryTreePrinter;
 import symbolTable.SymbolTable;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class Main {
 
     public static void main(String[] args) {
         BinarySearchTree binarySearchTree = new BinarySearchTree();
 	    SymbolTable symbolTable = new SymbolTable(binarySearchTree);
-		HashMap<String, Integer> PIF = new HashMap<String, Integer>();
+		PIF PIF = new PIF();
 
 
-		ArrayList<String> separators = new ArrayList<>(Arrays.asList(readSeparatorsFromFile("token.in")));
+		ArrayList<String> separators = new ArrayList<>(Arrays.asList(readSeparatorsFromFile()));
 
-		ArrayList<String> operators = new ArrayList<>(Arrays.asList(readOperatorsFromFile("token.in")));
+		ArrayList<String> operators = new ArrayList<>(Arrays.asList(readOperatorsFromFile()));
 
-		ArrayList<String> reservedWords = new ArrayList<>(Arrays.asList(readReservedWordsFromFile("token.in")));
+		ArrayList<String> reservedWords = new ArrayList<>(Arrays.asList(readReservedWordsFromFile()));
 
 		Scanner scanner = new Scanner(separators, operators);
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader("p1.in"));
+
+
+			String inputProgram = chooseInputProgram();
+
+			reader = new BufferedReader(new FileReader(inputProgram));
 			String line = reader.readLine();
 			int lineIndex = 1;
 			while (line != null) {
 				for(String token: scanner.getTokensFromLine(line)){
 					if(isOperator(token, operators) || isSeparator(token, separators) || isReservedWord(token, reservedWords)){
-						PIF.put(token, -1);
+						PIF.add(new Pair(token, -1));
 
 					}
 					else{
 						if(isConstant(token) || isIdentifier(token)) {
 							symbolTable.insert(token);
 							int indexInST = symbolTable.search(token);
-							PIF.put(token, indexInST);
+							PIF.add(new Pair(token, indexInST));
 						}
 						else{
-							System.out.println("Lexical error on line " + lineIndex + ": " + token);
+							if(!token.equals(" "))
+								System.out.println("Lexical error on line " + lineIndex + ": " + token);
 						}
 					}
 				}
@@ -55,16 +58,61 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(PIF);
-		new BinaryTreePrinter(binarySearchTree.getRoot()).print(System.out);
+		writeToPIFFile(PIF);
+		writeToSTFile(symbolTable);
 
     }
 
-	private static String[] readReservedWordsFromFile(String fileName) {
+	private static void writeToSTFile(SymbolTable symbolTable) {
+		try {
+			FileWriter myWriter = new FileWriter("ST.out");
+			myWriter.write(symbolTable.getNodesByIndex());
+			myWriter.close();
+		} catch (IOException e) {
+			System.out.println("An error occurred when writing in ST.out file.");
+			e.printStackTrace();
+		}
+	}
+
+	private static void writeToPIFFile(PIF pif) {
+		try {
+			FileWriter myWriter = new FileWriter("PIF.out");
+			myWriter.write(pif.toString());
+			myWriter.close();
+		} catch (IOException e) {
+			System.out.println("An error occurred when writing in PIF.out file.");
+			e.printStackTrace();
+		}
+	}
+
+	private static String chooseInputProgram() throws IOException {
+		System.out.println("Choose the input program from above:");
+		System.out.println("\t 1. p1.in\n \t 2. p1err.in\n \t 3. p2.in\n \t 4. p3.in");
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+		String name = reader.readLine();
+		if(name.equals("1")){
+			return "p1.in";
+		}
+		if(name.equals("2")){
+			return "p1err.in";
+		}
+		if(name.equals("3")){
+			return "p2.in";
+		}
+		if(name.equals("4")){
+			return "p3.in";
+		}
+		throw new IOException("Input not available1");
+
+	}
+
+	private static String[] readReservedWordsFromFile() {
 		String[] reservedWords = null;
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(fileName));
+			reader = new BufferedReader(new FileReader("token.in"));
 			String line = reader.readLine();
 			int lineIndex = 1;
 			while (line != null) {
@@ -81,11 +129,11 @@ public class Main {
 		return reservedWords;
 	}
 
-	private static String[] readOperatorsFromFile(String fileName) {
+	private static String[] readOperatorsFromFile() {
 		String[] operators = null;
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(fileName));
+			reader = new BufferedReader(new FileReader("token.in"));
 			String line = reader.readLine();
 			int lineIndex = 1;
 			while (line != null) {
@@ -102,11 +150,11 @@ public class Main {
 		return operators;
 	}
 
-	private static String[] readSeparatorsFromFile(String fileName) {
+	private static String[] readSeparatorsFromFile() {
 		String[] separators = null;
 		BufferedReader reader;
 		try {
-			reader = new BufferedReader(new FileReader(fileName));
+			reader = new BufferedReader(new FileReader("token.in"));
 			String line = reader.readLine();
 			int lineIndex = 1;
 			while (line != null) {
@@ -126,27 +174,26 @@ public class Main {
 	private static boolean isConstant(String token) {
 
     	//integer
-		if(token.matches("[+-]?[1-9][0-9]+") || token.matches("0"))
+		if(token.matches("[+-]?[1-9][0-9]*") || token.matches("0"))
 			return true;
 
+		String lastCharacter = String.valueOf(token.charAt(token.length() - 1));
+
 		//string
-		if(token.matches("[0-9A-Za-z_]+")){
-			return true;
-		}
+		if(String.valueOf(token.charAt(0)).equals("\"") && lastCharacter.equals("\""))
+			if(token.substring(1, token.length() - 1).matches("[0-9A-Za-z_ ]+")){
+				return true;
+			}
 
 
 		//char
-		if(token.matches("[0-9A-Za-z_]"))
-			return true;
+		if(String.valueOf(token.charAt(0)).equals("'") && lastCharacter.equals("'"))
+			if(token.matches("[0-9A-Za-z ]"))
+				return true;
 
 		//boolean
-		if(token.equals("TRUE") || token.equals("FALSE")){
-			return true;
-		}
-
-    	return false;
+		return token.equals("TRUE") || token.equals("FALSE");
 	}
-
 
 	private static boolean isIdentifier(String token) {
 		return token.matches("[a-zA-Z]+[a-zA-Z0-9]*");
@@ -161,7 +208,7 @@ public class Main {
 
 	private static boolean isSeparator(String token, ArrayList<String> separators) {
 		for(String separator: separators)
-			if(token.equals(separator))
+			if(token.equals(separator) && !token.equals(" "))
 				return true;
 		return false;
 	}
